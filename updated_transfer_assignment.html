@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transfer Planner Assignment</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    margin:0;
+    padding:20px;
+    color:#222;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+h1,h2{
+    color:#1d3557;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th, td{
+    border:1px solid #ccc;
+    padding:10px;
+    text-align:left;
+}
+
+th{
+    background:#457b9d;
+    color:white;
+}
+
+button{
+    margin-top:15px;
+    padding:10px 20px;
+    border:none;
+    background:#1d3557;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:hover{
+    background:#16324f;
+}
+
+select{
+    padding:8px;
+    margin-top:10px;
+    font-size:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Academic Transfer Planner</h1>
+
+<h2>Current Program: Computer Science</h2>
+
+<label><strong>Select Target Program:</strong></label>
+<br><br>
+
+<select id="programSelect">
+    <option>Computer Engineering</option>
+    <option>Civil Engineering</option>
+    <option>Electrical and Electronics Engineering</option>
+</select>
+
+<h2>Course List</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Course</th>
+            <th>Passed</th>
+        </tr>
+    </thead>
+
+    <tbody id="courseTableBody"></tbody>
+</table>
+
+<button onclick="generateTransfer()">Transfer</button>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+
+const courses = [
+
+    {name:"Calculus I", passed:"Yes"},
+    {name:"Introduction to Programming", passed:"Yes"},
+    {name:"Introduction to Modern Thought I", passed:"Yes"},
+    {name:"Cyberlaw and Ethics", passed:"Yes"},
+    {name:"Calculus II", passed:"Yes"},
+    {name:"Object Oriented Programming", passed:"Yes"},
+    {name:"Mathematical Foundation of Computing", passed:"Yes"},
+    {name:"Computer Organization", passed:"Yes"},
+    {name:"Calculus III", passed:"Yes"},
+    {name:"Programming Languages", passed:"Yes"},
+    {name:"Introduction to Linear Algebra", passed:"Yes"},
+    {name:"Computational and Statistical Methods", passed:"Yes"},
+    {name:"Computer and Data Networks", passed:"Yes"},
+    {name:"Algorithms and Data Structures", passed:"Yes"},
+    {name:"Principles of Numerical Methods", passed:"Yes"},
+    {name:"Introduction to Cybersecurity", passed:"Yes"},
+    {name:"Elements of Computational Complexity", passed:"Yes"},
+    {name:"Introduction to Operating Systems", passed:"Yes"},
+    {name:"Academic Techniques", passed:"Yes"},
+
+    {name:"Introduction to Machine Learning", passed:"No"},
+    {name:"Databases and Information Systems", passed:"No"},
+    {name:"Design Patterns", passed:"No"},
+    {name:"Distributed and Parallel Computing", passed:"No"},
+
+    {name:"Web Programming", passed:"Yes"},
+    {name:"Mobile Applications Development", passed:"Yes"},
+    {name:"Artificial Neural Networks", passed:"Yes"},
+    {name:"Computer Vision", passed:"Yes"},
+    {name:"Big Data Systems", passed:"Yes"}
+];
+
+const tableBody = document.getElementById("courseTableBody");
+
+courses.forEach(course => {
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+        <td>${course.name}</td>
+        <td>${course.passed}</td>
+    `;
+
+    tableBody.appendChild(row);
+});
+
+function getEquivalent(course, targetProgram){
+
+    const mappings = {
+
+        "Computer Engineering": {
+            "Introduction to Programming":"Embedded Programming",
+            "Object Oriented Programming":"Software Design",
+            "Computer Organization":"Computer Architecture",
+            "Algorithms and Data Structures":"Advanced Algorithms",
+            "Introduction to Operating Systems":"Microprocessors",
+            "Computer and Data Networks":"Network Engineering",
+            "Web Programming":"Web Systems",
+            "Mobile Applications Development":"Mobile Systems",
+            "Computer Vision":"Image Processing"
+        },
+
+        "Civil Engineering": {
+            "Calculus I":"Engineering Mathematics",
+            "Calculus II":"Advanced Mathematics",
+            "Calculus III":"Applied Mathematics",
+            "Introduction to Linear Algebra":"Engineering Algebra",
+            "Computational and Statistical Methods":"Engineering Statistics",
+            "Academic Techniques":"Project Documentation"
+        },
+
+        "Electrical and Electronics Engineering": {
+            "Introduction to Programming":"C Programming",
+            "Computer Organization":"Digital Systems",
+            "Computer and Data Networks":"Communication Systems",
+            "Introduction to Operating Systems":"Embedded Systems",
+            "Algorithms and Data Structures":"Signal Algorithms",
+            "Artificial Neural Networks":"AI for Electronics",
+            "Big Data Systems":"Data Processing Systems"
+        }
+    };
+
+    return mappings[targetProgram][course] || "N/A";
+}
+
+function generateTransfer(){
+
+    const selectedProgram = document.getElementById("programSelect").value;
+
+    let output = `
+        <h2>Equivalency Table</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Your Passed Course</th>
+                    <th>Equivalent Course in ${selectedProgram}</th>
+                </tr>
+            </thead>
+
+            <tbody>
+    `;
+
+    courses.forEach(course => {
+
+        if(course.passed === "Yes"){
+
+            output += `
+                <tr>
+                    <td>${course.name}</td>
+                    <td>${getEquivalent(course.name, selectedProgram)}</td>
+                </tr>
+            `;
+        }
+    });
+
+    output += `
+            </tbody>
+        </table>
+    `;
+
+    document.getElementById("result").innerHTML = output;
+}
+
+</script>
+
+</body>
+</html>
