@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transfer Planner Assignment</title>
+
+<style>
+    body{
+        font-family: Arial, sans-serif;
+        margin:0;
+        padding:20px;
+        background:#f4f6f9;
+        color:#222;
+    }
+
+    h1,h2,h3{
+        color:#1d3557;
+    }
+
+    .container{
+        max-width:1100px;
+        margin:auto;
+        background:white;
+        padding:25px;
+        border-radius:10px;
+        box-shadow:0 0 10px rgba(0,0,0,0.1);
+    }
+
+    table{
+        width:100%;
+        border-collapse:collapse;
+        margin-top:15px;
+    }
+
+    th,td{
+        border:1px solid #ccc;
+        padding:10px;
+        text-align:left;
+    }
+
+    th{
+        background:#457b9d;
+        color:white;
+    }
+
+    button{
+        margin-top:15px;
+        padding:10px 20px;
+        border:none;
+        background:#1d3557;
+        color:white;
+        cursor:pointer;
+        border-radius:5px;
+        font-size:16px;
+    }
+
+    button:hover{
+        background:#16324f;
+    }
+
+    select{
+        padding:8px;
+        margin-top:10px;
+        font-size:15px;
+    }
+
+    .documentation{
+        margin-top:40px;
+        background:#fafafa;
+        padding:20px;
+        border-radius:10px;
+        border:1px solid #ddd;
+    }
+
+    pre{
+        background:#272822;
+        color:#f8f8f2;
+        padding:15px;
+        overflow:auto;
+        border-radius:5px;
+    }
+
+    code{
+        color:#ffcc66;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Academic Transfer Planner</h1>
+
+<h2>Current Program: Computer Science</h2>
+
+<label><strong>Select Target Program:</strong></label>
+<br>
+
+<select id="programSelect">
+    <option>Computer Engineering</option>
+    <option>Civil Engineering</option>
+    <option>Electrical and Electronics Engineering</option>
+</select>
+
+<h2>Course List</h2>
+
+<table id="courseTable">
+    <thead>
+        <tr>
+            <th>Course</th>
+            <th>Passed</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<button onclick="generateTransfer()">Transfer</button>
+
+<div id="resultSection"></div>
+
+</div>
+
+<script>
+
+const courses = [
+    {name:"Introduction to Programming", passed:"Yes"},
+    {name:"Calculus I", passed:"Yes"},
+    {name:"Physics I", passed:"No"},
+    {name:"Database Systems", passed:"Yes"},
+    {name:"Computer Networks", passed:"No"},
+    {name:"Data Structures", passed:"Yes"},
+    {name:"Operating Systems", passed:"Yes"},
+    {name:"Artificial Intelligence", passed:"No"},
+    {name:"Software Engineering", passed:"Yes"},
+    {name:"Web Development", passed:"Yes"},
+    {name:"Linear Algebra", passed:"Yes"},
+    {name:"Discrete Mathematics", passed:"Yes"},
+    {name:"Cyber Security", passed:"Yes"},
+    {name:"Mobile Application Development", passed:"Yes"},
+    {name:"Machine Learning", passed:"Yes"}
+];
+
+const tbody = document.querySelector("#courseTable tbody");
+
+courses.forEach(course=>{
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+        <td>${course.name}</td>
+        <td>${course.passed}</td>
+    `;
+
+    tbody.appendChild(row);
+});
+
+function getEquivalent(course, targetProgram){
+
+    const mapping = {
+
+        "Computer Engineering":{
+            "Introduction to Programming":"Embedded Programming",
+            "Calculus I":"Engineering Mathematics",
+            "Database Systems":"Computer Architecture",
+            "Data Structures":"Algorithms",
+            "Operating Systems":"Microprocessors",
+            "Software Engineering":"System Design",
+            "Web Development":"N/A",
+            "Linear Algebra":"Engineering Mathematics II",
+            "Discrete Mathematics":"Digital Logic",
+            "Cyber Security":"Network Security",
+            "Mobile Application Development":"Mobile Systems",
+            "Machine Learning":"Intelligent Systems"
+        },
+
+        "Civil Engineering":{
+            "Introduction to Programming":"N/A",
+            "Calculus I":"Engineering Mathematics",
+            "Database Systems":"N/A",
+            "Data Structures":"N/A",
+            "Operating Systems":"N/A",
+            "Software Engineering":"Project Management",
+            "Web Development":"N/A",
+            "Linear Algebra":"Applied Mathematics",
+            "Discrete Mathematics":"Statistics",
+            "Cyber Security":"N/A",
+            "Mobile Application Development":"N/A",
+            "Machine Learning":"Construction Data Analysis"
+        },
+
+        "Electrical and Electronics Engineering":{
+            "Introduction to Programming":"C Programming",
+            "Calculus I":"Advanced Mathematics",
+            "Database Systems":"Information Systems",
+            "Data Structures":"Signal Algorithms",
+            "Operating Systems":"Embedded Systems",
+            "Software Engineering":"Control Systems Design",
+            "Web Development":"N/A",
+            "Linear Algebra":"Engineering Algebra",
+            "Discrete Mathematics":"Circuit Mathematics",
+            "Cyber Security":"Communication Security",
+            "Mobile Application Development":"Digital Systems",
+            "Machine Learning":"AI for Electronics"
+        }
+    };
+
+    return mapping[targetProgram][course] || "N/A";
+}
+
+function generateTransfer(){
+
+    const targetProgram = document.getElementById("programSelect").value;
+
+    let html = `
+        <h2>Equivalency Table</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Your Passed Course</th>
+                    <th>Equivalent Course in ${targetProgram}</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    courses.forEach(course=>{
+
+        if(course.passed === "Yes"){
+
+            html += `
+                <tr>
+                    <td>${course.name}</td>
+                    <td>${getEquivalent(course.name, targetProgram)}</td>
+                </tr>
+            `;
+        }
+    });
+
+    html += `
+            </tbody>
+        </table>
+    `;
+
+    document.getElementById("resultSection").innerHTML = html;
+}
+
+</script>
+
+</body>
+</html>
